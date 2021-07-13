@@ -1,6 +1,6 @@
 <template>
   <div @click="$refs.cmd.focus();">
-    <div ref="terminal" id="container">
+    <div ref="terminal" id="container" :style="containerComputedStyle">
       <div v-if="banner" id="banner">
         <p>
           <img
@@ -18,7 +18,7 @@
       </div>
       <output ref="output"></output>
       <div id="input-line" class="input-line">
-        <div class="prompt">
+        <div class="prompt" :style="promptComputedStyle">
           <div v-if="banner.emoji.first && showemoji">({{banner.emoji.first}})</div>
           <div v-if="banner.emoji.second && !showemoji">({{banner.emoji.second}})</div>
           <div>{{banner.sign ? banner.sign : '>>'}}</div>
@@ -42,6 +42,31 @@
 <script>
 export default {
   props: {
+    backgroundColor: {
+      type: String,
+      default: 'black',
+      required: false,
+    },
+    textColor: {
+      type: String,
+      default: 'white',
+      required: false,
+    },
+    signTextColor: {
+      type: String,
+      default: '#3a8b17',
+      required: false,
+    },
+    fullHeight: {
+      type: Boolean,
+      default: false,
+      required: false,
+    },
+    fullWidth: {
+      type: Boolean,
+      default: false,
+      required: false,
+    },
     shell_input: {
       required: false
     },
@@ -95,6 +120,19 @@ export default {
       }
 
       return tab;
+    },
+    containerComputedStyle() {
+      return `
+      background-color: ${this.backgroundColor};
+      color: ${this.textColor};
+      width: ${this.fullWidth ? '100vw' : ''};
+      height: ${this.fullHeight ? '100vh' : ''};
+      `;
+    },
+    promptComputedStyle() {
+      return `
+      color: ${this.signTextColor}
+      `;
     }
   },
   watch: {
@@ -219,8 +257,6 @@ export default {
 
 <style lang="css" scoped>
 #container {
-  color: white;
-  background-color: black;
   font-size: 11pt;
   font-family: Inconsolata, monospace;
   padding: 0.5em 1.5em 1em 1em;
@@ -254,7 +290,6 @@ img {
 }
 .prompt {
   white-space: nowrap;
-  color: #3a8b17;
   margin-right: 7px;
   display: -webkit-box;
   display: -moz-box;
