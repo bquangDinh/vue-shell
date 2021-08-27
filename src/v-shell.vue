@@ -239,6 +239,7 @@ export default {
         "<pre>" + html + "</pre>"
       );
       this.value = "";
+      this.$emit('rendered');
     }
   },
   mounted() {
